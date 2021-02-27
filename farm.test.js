@@ -188,7 +188,7 @@ describe("getRevenueForCrop", () => {
 
     const crop = {
       plant: corn,
-      yield: 150 // When the yield is assigned in the crop object, does this yield already include the environment factors? In the example code, the factors are set in the plant object, not in the crop object. Would that mean that the total yield of that crop is already corrected for environment factors? If not, it could still be calculated, but then it would be weird to have the factors in the plant object rather than in the crop object. On the other hand, it would also be weird to have the factors set in the crop object, since these factors depend on the type of vegetable, not the crop. That's why I think that the yield property should never be added to the crop object, unless the environment factors are already corrected for.
+      yield: 150 // When the yield is assigned in the crop object, does this yield already include the environment factors? In the example code, the factors are set in the plant object, not in the crop object. Would that mean that the total yield of that crop is already corrected for environment factors? If not, it could still be calculated, but then it would be weird to have the factors in the plant object rather than in the crop object. On the other hand, it would also be weird to have the factors set in the crop object, since these factors depend on the type of vegetable, not the crop. That's why I think that the yield property should never be added to the crop object, unless the environment factors are already corrected for. UPDATE: I just realised that the yield in a crop object is not in the example code. I added it here, since in the assignment it is defined as the yield of one plant OR the yield of a crop. Maybe the latter should be removed from the assigment to prevent confusion about this.
     }
 
     const environmentFactors = {
@@ -334,5 +334,18 @@ describe("getTotalProfit", () => {
   });
 });
 
-// Questions: 
+// Questions and remarks: 
 // - In the functions above, the plant/crop/environmentFactors objects are written again and again for each test. I was thinking of making a global object, at least for the environmentFactors, but I'm not sure if that's considered good practice. If one of these factors are changed globally, the expected outcome of every single test has to be recalculated. I suppose that there's be no way to automatize that, since the outcome will be biased (I believe that an expected output should involve no calculations from the computer, at least not in the testing phase). How do you think about this?
+
+// - I mentioned it somewhere above, but I wanted to point out again the confusion in the example code about the crop/plant property name. For example this (from the getYieldForCrop test)
+
+  // const corn = {
+  //     name: "corn",
+  //     yield: 3,
+  // };
+  // const input = {
+  //     crop: corn,
+  //     numCrops: 10,
+  // };
+
+// The corn variable refers to the corn plant (the input is passed as an argument to the getYieldForCrop() function, suggesting that the argument should be a crop item). The input variable should refer to the crop, but inside the object, the crop key refers to the corn plant. That doesn't make sense. In another piece of code there is an array of crops (getTotalYield test). In that array are objects that also have the numCrops property, even though the items in the array itself are supposed to be crops. It does not make sense to have a numCrops property inside a single crop item.
