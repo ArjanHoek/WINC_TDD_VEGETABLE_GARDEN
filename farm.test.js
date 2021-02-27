@@ -1,4 +1,11 @@
-const { getYieldForPlant, getYieldForCrop, getTotalYield, getCostsForCrop, getRevenueForCrop } = require("./farm");
+const {
+  getYieldForPlant,
+  getYieldForCrop,
+  getTotalYield,
+  getCostsForCrop,
+  getRevenueForCrop,
+  getProfitForCrop
+} = require("./farm");
 
 describe("getYieldForPlant", () => {
   const corn = {
@@ -53,6 +60,7 @@ describe("getTotalYield", () => {
 });
 
 describe("getCostsForCrop", () => {
+
   test("Get costs for crop", () => {
     const corn = {
       name: "corn",
@@ -67,15 +75,58 @@ describe("getCostsForCrop", () => {
 });
 
 describe("getRevenueForCrop", () => {
-  test("Get revenue for crop", () => {
+  test("Get revenue for crop, yield per plant", () => {
     const corn = {
       name: "corn",
-      salePrice: 3
+      salePrice: 3,
+      yield: 2
     };
     const input = {
       crop: corn,
-      numPlants: 120
+      numPlants: 120,
     }
-    expect(getRevenueForCrop(input)).toBe(360)
+    expect(getRevenueForCrop(input)).toBe(720)
+  })
+
+  test("Get revenue for crop, yield per crop", () => {
+    const corn = {
+      name: "corn",
+      salePrice: 2.50,
+    };
+    const input = {
+      crop: corn,
+      yield: 150
+    }
+    expect(getRevenueForCrop(input)).toBe(375)
+  })
+})
+
+describe("getProfitForCrop", () => {
+  test("Get profit for crop, yield per plant", () => {
+    const corn = {
+      name: "corn",
+      salePrice: 5,
+      costs: 3,
+      yield: 2
+    };
+    const input = {
+      crop: corn,
+      numPlants: 100
+    }
+    expect(getProfitForCrop(input)).toBe(700)
+  })
+
+  test("Get profit for crop, yield per crop", () => {
+    const corn = {
+      name: "corn",
+      salePrice: 4,
+      costs: 2,
+    };
+    const input = {
+      crop: corn,
+      numPlants: 100,
+      yield: 150
+    }
+    expect(getProfitForCrop(input)).toBe(400)
   })
 })
