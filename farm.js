@@ -1,5 +1,23 @@
 
-const getYieldForPlant = plant => plant.yield;
+const getYieldForPlant = (plant, environmentFactors) => {
+  let plantYield = plant.yield;
+
+  if (environmentFactors) {
+    const environmentFactorKeys = Object.keys(environmentFactors);
+    const plantFactors = plant.factors;
+
+    for (let key of environmentFactorKeys) {
+      const plantFactor = plantFactors[key];
+
+      if (plantFactor) {
+        const percentage = plantFactor[environmentFactors[key]];
+        plantYield = plantYield * (1 + percentage / 100)
+      }
+    }
+  }
+
+  return plantYield
+};
 
 const getYieldForCrop = crop => crop.numPlants * getYieldForPlant(crop.plant);
 
@@ -9,7 +27,7 @@ const getCostsForCrop = crop => crop.numPlants * crop.plant.costs; // Could also
 
 const getRevenueForCrop = input => input.yield
   ? input.yield * input.plant.salePrice
-  : input.numPlants * input.plant.yield * input.plant.salePrice;
+  : input.numPlants * getYieldForPlant(input.plant) * input.plant.salePrice;
 
 const getProfitForCrop = input => getRevenueForCrop(input) - getCostsForCrop(input);
 
